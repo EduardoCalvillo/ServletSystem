@@ -46,7 +46,7 @@ public class UDPSenderHandler implements Runnable{
         outPacket = new DatagramPacket(this.message.getBytes(),this.message.length());
 //        outPacket.setAddress(node.getPeer().getBroadcast());
         outPacket.setAddress(InetAddress.getByName("255.255.255.255"));
-        outPacket.setPort(Peer.PORT_UDP);
+        outPacket.setPort(7777);
     }
     
     @Override
