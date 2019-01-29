@@ -143,7 +143,7 @@ public class ChangeName extends javax.swing.JFrame {
                 this.confirm = true;
                 /* Ok, then sends a broadcast to inform */
                 try {
-                    new UDPSenderService().sendRename(node);
+                    new UDPSenderService().sendRename(node, oldName);
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -184,7 +184,7 @@ public class ChangeName extends javax.swing.JFrame {
                     this.confirm = true;
                     /* Ok, then sends a broadcast to inform */
                     try {
-                        new UDPSenderService().sendRename(node);
+                        new UDPSenderService().sendRename(node, oldName);
                     } catch (UnknownHostException ex) {
                         Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
                     }

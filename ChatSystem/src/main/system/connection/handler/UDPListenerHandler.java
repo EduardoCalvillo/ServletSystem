@@ -61,13 +61,14 @@ public class UDPListenerHandler implements Runnable {
                 /* Analyse the message broadcast */
                 this.dgramSocket.receive(this.inPacket);
 
-                String host = inPacket.getAddress().getHostAddress();
-                if (!host.equals(node.getPeer().getHost())) {
+                String hostser = inPacket.getAddress().getHostAddress();
+                if (!hostser.equals(node.getPeer().getHost())) {
                     String msg = new String(inPacket.getData(), 0, inPacket.getLength());
                     String seg[] = msg.split(":");
-                    String pseudo = seg[0];
-                    int port = Integer.parseInt(seg[1]);
-                    msg = seg[2];
+                    String host = seg[0];
+                    String pseudo = seg[1];
+                    int port = Integer.parseInt(seg[2]);
+                    msg = seg[3];
 
                     if (msg.equals("disconnect")) {
                         System.out.println("[dis] " + host + " sends a " + msg);
