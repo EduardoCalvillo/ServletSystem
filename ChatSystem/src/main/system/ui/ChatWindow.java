@@ -77,7 +77,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         hostLabel = new javax.swing.JLabel();
         backButton = new javax.swing.JButton();
         clientLabel = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        sendImagebutton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -118,10 +118,10 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
 
         clientLabel.setText("To :");
 
-        jButton1.setText("Send Image");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        sendImagebutton.setText("Send Image");
+        sendImagebutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                sendImagebuttonActionPerformed(evt);
             }
         });
 
@@ -135,7 +135,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(hostLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addComponent(sendImagebutton))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(message, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,7 +166,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(hostLabel)
-                    .addComponent(jButton1))
+                    .addComponent(sendImagebutton))
                 .addContainerGap())
         );
 
@@ -221,7 +221,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         this.setVisible(false);
     }//GEN-LAST:event_formWindowClosing
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void sendImagebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendImagebuttonActionPerformed
         // TODO add your handling code here:
         
         JFileChooser fileChooser = new JFileChooser();
@@ -247,7 +247,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         }
         
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_sendImagebuttonActionPerformed
 
     /**
      * Create methods
@@ -292,11 +292,11 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
     private javax.swing.JTextArea chatBox;
     private javax.swing.JLabel clientLabel;
     private javax.swing.JLabel hostLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField message;
     private javax.swing.JLabel nicknameLabel;
     private javax.swing.JButton sendButton;
+    private javax.swing.JButton sendImagebutton;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -68,11 +68,11 @@ public class Login extends javax.swing.JFrame {
         hostField = new javax.swing.JTextField();
         titleLabel = new javax.swing.JLabel();
         logInButton = new javax.swing.JButton();
-        passwordLabel = new javax.swing.JLabel();
-        passwordField = new javax.swing.JPasswordField();
+        versionLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login - ChatSystem");
+        setMinimumSize(new java.awt.Dimension(300, 0));
         setSize(new java.awt.Dimension(0, 0));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -106,14 +106,9 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        passwordLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        passwordLabel.setText("Your password :");
-
-        passwordField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                passwordFieldKeyPressed(evt);
-            }
-        });
+        versionLabel.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
+        versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        versionLabel.setText("Version :Centralized Server");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,39 +117,37 @@ public class Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(passwordLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hostField)
-                    .addComponent(nicknameField)
-                    .addComponent(nicknameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hostLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(passwordField)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nicknameField)
+                            .addComponent(versionLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(hostField)
+                            .addComponent(nicknameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(hostLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(nicknameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(nicknameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(passwordLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(hostLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logInButton)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,9 +157,7 @@ public class Login extends javax.swing.JFrame {
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
         if (this.nicknameField.getText().equals("")) {
             this.titleLabel.setText("User nickname cannot be empty.");
-        } else {
-            /* Check the password if it is valid*/
-            if (isValid(nicknameField.getText(), String.valueOf(passwordField.getPassword()))) {
+        } else {        
                 try {
                     this.titleLabel.setText("Connecting... Please Wait");
                     /* Create a node with the nickname and the host address */
@@ -221,9 +212,6 @@ public class Login extends javax.swing.JFrame {
                 } catch (IOException | InterruptedException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                this.titleLabel.setText("<html>ERROR : User not found or password incorrect !</html>");
-            }
         }
     }//GEN-LAST:event_logInButtonActionPerformed
 
@@ -241,115 +229,12 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowClosing
 
-    private void passwordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFieldKeyPressed
-        // TODO add your handling code here:
-        if (this.nicknameField.getText().equals("")) {
-            this.titleLabel.setText("User nickname cannot be empty.");
-        } else {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                /* Check the password if it is valid*/
-                if (isValid(nicknameField.getText(), String.valueOf(passwordField.getPassword()))) {
-                    try {
-                        this.titleLabel.setText("Connecting... Please Wait");
-                        /* Create a node with the nickname and the host address */
-                        Peer peer = new Peer(nicknameField.getText(), hostField.getText()); // port = portTCP = 9999
-                        this.node = new Node(peer);
-                        //Home home = this.node.getHome();
-
-                        /* Start a server thread TCP to listen */
-                        if (listenTCP != null && runnableTCP != null) {
-                            runnableTCP.terminate();
-                            listenTCP.join();
-                        }
-                        runnableTCP = new TCPListenerHandler(this.node, HistoryDB.getInstance());
-                        listenTCP = new Thread(runnableTCP);
-                        listenTCP.start();
-
-                        /* This thread is used to reveice le broadcast by UDP*/
-                        if (listenUDP != null && runnableUDP != null) {
-                            runnableUDP.terminate();
-                            listenUDP.join();
-                        }
-                        runnableUDP = new UDPListenerHandler(this.node);
-                        listenUDP = new Thread(runnableUDP);
-                        listenUDP.start();
-
-                        /* Send a broadcast when log in*/
-                        new UDPSenderService().sendBroadcast(this.node);
-
-                        /* Open homepage if the nickname is unique*/
-                        //            Home home = new Home(node,this.history);
-                        //            System.out.println(this.node.checkNameUniq());
-                        //            System.out.println(this.node);
-                        //            //this.node.getHome().display();
-                        //            System.out.println(this.node);
-                        //            System.out.println(this.node.checkNameUniq());
-                        sleep(10);
-                        //            System.out.println(this.node);
-                        if (this.node.checkNameUniq()) {
-                            new UDPSenderService().sendBroadcast(this.node);
-                            this.node.getHome().display();
-                            this.setVisible(false);
-                            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                            this.dispose();
-                        } else {
-                            new UDPSenderService().sendDisconnect(this.node);
-                            this.titleLabel.setText("WARNING : This name has been used !");
-                        }
-                        //sleep(10);
-                        System.out.println(this.node);
-                        System.out.println(this.node.checkNameUniq());
-
-                    } catch (IOException | InterruptedException ex) {
-                        Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    this.titleLabel.setText("<html>ERROR : User not found or password incorrect !</html>");
-                }
-            }
-        }
-    }//GEN-LAST:event_passwordFieldKeyPressed
-
     /**
      * Create methods
      */
     public void display() {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-    }
-
-    public static boolean isValid(String login, String password) {
-        boolean valid = false;
-        Connection connexion = null;
-        System.out.println("Pass: " + password);
-        /*try {
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Le pilote JDBC MySQL a été chargé");
-            // Connect to Database at localhost 
-            connexion = DriverManager.getConnection("jdbc:mysql://localhost/DATABASE_NAME", "root", "PASSWORD");
-            Statement state = connexion.createStatement();
-            ResultSet result = state.executeQuery("SELECT login,password FROM user");
-            ResultSetMetaData resultMeta = result.getMetaData();
-            
-            // Verify the login with the correct password 
-            while(result.next()){
-                if (result.getObject(1).toString().equals(login) && result.getObject(2).toString().equals(password) ){
-                    valid = true;
-                }
-                // Show the table 
-                for(int i = 1; i <= resultMeta.getColumnCount(); i++){
-                    System.out.print(result.getObject(i).toString() + " | ");
-                }
-                System.out.println();
-            }
-            result.close();
-            state.close();
-            connexion.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return valid; */ return true;
     }
 
     @Override
@@ -363,9 +248,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton logInButton;
     private javax.swing.JTextField nicknameField;
     private javax.swing.JLabel nicknameLabel;
-    private javax.swing.JPasswordField passwordField;
-    private javax.swing.JLabel passwordLabel;
     private javax.swing.JLabel titleLabel;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
 }
