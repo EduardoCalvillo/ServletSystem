@@ -81,12 +81,12 @@ public class Servlet implements Runnable {
                 
                 case "rename":
                     String oldName = msg.split(":",4)[3];
-					System.out.println("[rnm] "+host + " renames from "+oldName+"to " + pseudo);
+					System.out.println("[rnm] "+host + " renames from "+oldName+" to " + pseudo);
 					subscribers.remove(host+":"+oldName);
 					subscribers.add(host+":"+pseudo);
                     for (String subscriber : subscribers){
                         if(!subscriber.equals(host+":"+pseudo)){
-                            outMessage=subscriber+":"+port+":"+"rename";
+                            outMessage=host+":"+pseudo+":"+port+":"+"rename";
 							outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
                             outPacket.setAddress(InetAddress.getByName(subscriber.split(":",2)[0]));
                             outPacket.setPort(4444);
