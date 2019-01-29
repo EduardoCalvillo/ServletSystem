@@ -37,51 +37,61 @@ public class Servlet implements Runnable {
                 String msg = new String(inPacket.getData(),0,inPacket.getLength());
                 String host = inPacket.getAddress().getHostAddress();
                 String pseudo = msg.split(":",3)[1];
-                int port = Integer.parseInt(msg.split(":",3)[2]);
+                int port = Integer.parseInt(msg.split(":",4)[2]);
                 switch(msg.split(":",3)[0]) {
 
                 case "online":
                     System.out.println("[conn] "+host + " connects");
-                    if(!subscribers.contains(host)){
-                        subscribers.add(host);
+                    if(!subscribers.contains(host+":"+pseudo)){
+                        subscribers.add(host+":"+pseudo);
                         System.out.println("[sub] "+host+" added to list");
                     }
-                    outMessage=pseudo+":"+port+":"+"OK";
+                    
                     for (String subscriber : subscribers){
-                        if(!subscriber.equals(host)){
-                            outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
+                        if(!subscriber.equals(host+":"+pseudo)){
+                            outMessage=subscriber+":"+port+":"+"OK";
+							outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
                             outPacket.setAddress(InetAddress.getByName(host));
                             outPacket.setPort(4444);
                             dgramSocket.send(outPacket);
-                            System.out.println("[>] MSG "+outMessage);
+                            System.out.println("[>"+host+":"+pseudo+"] MSG "+outMessage);
+
+							outMessage=host+":"+pseudo+":"+port+":"+"OK";
+							outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
+                            outPacket.setAddress(InetAddress.getByName(subscriber.split(":",2)[0]));
+                            outPacket.setPort(4444);
+                            dgramSocket.send(outPacket);
+                            System.out.println("[>"+subscriber+"] MSG "+outMessage);
                         } 
                     }             
                     break;
 
                 case "offline":
                     System.out.println("[dis] "+host + " disconnects");         
-                    outMessage=pseudo+":"+port+":"+"disconnect";
+                    subscribers.remove(host+":"+pseudo);
                     for (String subscriber : subscribers){
-                        if(!subscriber.equals(host)){
-                            outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
-                            outPacket.setAddress(InetAddress.getByName(host));
+                            outMessage=host+":"+pseudo+":"+port+":"+"disconnect";
+							outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
+                            outPacket.setAddress(InetAddress.getByName(subscriber.split(":",2)[0]));
                             outPacket.setPort(4444);
                             dgramSocket.send(outPacket);
-                            System.out.println("[>] MSG "+outMessage);
-                        }
+                            System.out.println("[>"+subscriber.split(":",2)[0]+"] MSG "+outMessage);
                     }                                  
                     break;
                 
                 case "rename":
-                    System.out.println("[rnm] "+host + " renames to " + pseudo);
-                    outMessage=pseudo+":"+port+":"+"rename";
+                    String oldName = msg.split(":",4)[3];
+					System.out.println("[rnm] "+host + " renames from "+oldName+"to " + pseudo);
+					subscribers.remove(host+":"+oldName);
+					subscribers.add(host+":"+pseudo);
                     for (String subscriber : subscribers){
-                        if(!subscriber.equals(host)){
-                            outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
-                            outPacket.setAddress(InetAddress.getByName(host));
+                        if(!subscriber.equals(host+":"+pseudo)){
+                            outMessage=subscriber+":"+port+":"+"rename";
+							outPacket = new DatagramPacket(outMessage.getBytes(), outMessage.length());
+                            outPacket.setAddress(InetAddress.getByName(subscriber.split(":",2)[0]));
                             outPacket.setPort(4444);
                             dgramSocket.send(outPacket);
-                            System.out.println("[>] MSG "+outMessage);
+                            System.out.println("[>"+subscriber.split(":",2)[0]+"] MSG "+outMessage);
                         }
                     }                   
                     break;
@@ -92,8 +102,10 @@ public class Servlet implements Runnable {
             } 
         } catch (IOException e){
             System.out.println("ERROR: Connection failure with: "+inPacket.getAddress().getHostAddress());
+			System.out.println(e);
         } catch (Exception ex) {
             System.out.println("ERROR: Connection failure with: "+inPacket.getAddress().getHostAddress());
+			System.out.println(ex);
         }
     }
 
