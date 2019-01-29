@@ -14,45 +14,41 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.system.model.Node;
-import main.system.model.Peer;
 
 /**
  *
  * @author Kuro10
  */
-public class UDPSenderHandler implements Runnable{
+public class UDPSenderHandler implements Runnable {
 
     /*
     * Attributs
-    */
+     */
     private DatagramSocket dgramSocket;
     private final DatagramPacket outPacket;
     private final String message;
-    
+
     /*
     *   Constructors
-    */
-    
-    public UDPSenderHandler(String host, int port, String message) throws UnknownHostException{
+     */
+    public UDPSenderHandler(String host, int port, String message) throws UnknownHostException {
         this.message = message;
-        outPacket = new DatagramPacket(message.getBytes(),message.length());
+        outPacket = new DatagramPacket(message.getBytes(), message.length());
         outPacket.setAddress(InetAddress.getByName(host));
         outPacket.setPort(port);
     }
 
     public UDPSenderHandler(Node node, String msg) throws UnknownHostException {
         this.message = msg;
-//        System.out.println(node.getPeer().getBroadcast().getHostName());
-        outPacket = new DatagramPacket(this.message.getBytes(),this.message.length());
-//        outPacket.setAddress(node.getPeer().getBroadcast());
+        outPacket = new DatagramPacket(this.message.getBytes(), this.message.length());
         outPacket.setAddress(InetAddress.getByName("255.255.255.255"));
-        outPacket.setPort(7777);
+        outPacket.setPort(7777); //Server port
     }
-    
+
     @Override
     public void run() {
         try {
-            //Request a coonection to the given peer
+            //Request a connection to the given peer and send message
             this.dgramSocket = new DatagramSocket();
             dgramSocket.send(outPacket);
             dgramSocket.close();
@@ -62,5 +58,5 @@ public class UDPSenderHandler implements Runnable{
             Logger.getLogger(UDPSenderHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

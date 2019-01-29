@@ -14,7 +14,7 @@ import main.system.model.*;
  * @author lmtran
  */
 public class MessageLog implements Serializable {
-    
+
     private Peer source;
     private Peer target;
     //private int port1;
@@ -23,7 +23,7 @@ public class MessageLog implements Serializable {
     private String hostTarget;
     private ArrayList<String> log;
     private int current_index = 0;
-    
+
     public MessageLog(Peer p1, Peer p2) {
         // TODO
         this.source = p1;
@@ -32,45 +32,29 @@ public class MessageLog implements Serializable {
         this.hostTarget = p2.getHost();
         this.log = new ArrayList<>(1000);
     }
-    
-//    public MessageLog(Peer target) {
-//        // TODO
-//        this.target = target;
-//        this.hostTarget = target.getHost();
-//        this.portTarget = target.getPort();
-//        this.log = new ArrayList<>(1000);
-//    }    
-    
-//    public MessageLog(int port1, int port2) {
-//        this.port1 = port1;
-//        this.port2 = port2;
-//        this.log = new ArrayList<>(100);
-//    }
-    
-    
+
     public void addMessage(String message) {
         this.log.add(message);
         current_index++;
     }
-    
+
     public ArrayList<String> getLog() {
         return this.log;
     }
-    
+
     public int getPortTarget() {
         return this.portTarget;
-    } 
-    
+    }
+
     public String getHostSource() {
         return this.hostSource;
-    }    
-    
+    }
+
     public String getHostTarget() {
         return this.hostTarget;
     }
-    
-    
-    @Override 
+
+    @Override
     public String toString() {
         String res = "";
         for (int i = 0; i < current_index; i++) {
@@ -78,9 +62,5 @@ public class MessageLog implements Serializable {
         }
         return res;
     }
-//    @Override
-//    public String toString() {
-//        return "[" + this.port1 + " | " + this.port2 + "]";
-//    }
-    
+
 }

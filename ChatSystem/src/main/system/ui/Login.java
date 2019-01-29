@@ -11,18 +11,12 @@ import main.system.model.Peer;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.net.UnknownHostException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.WindowConstants;
 import main.system.connection.handler.TCPListenerHandler;
 import main.system.connection.handler.UDPListenerHandler;
 import main.system.connection.service.UDPSenderService;
-import main.system.data.ChatHistory;
 import main.system.data.HistoryDB;
 
 /**
@@ -40,6 +34,7 @@ public class Login extends javax.swing.JFrame {
     static UDPListenerHandler runnableUDP = null;
     //public static ChatHistory history = new ChatHistory();
     private static final HistoryDB history = null;
+
     /**
      * Creates new form Login
      */
@@ -117,19 +112,17 @@ public class Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nicknameField)
-                            .addComponent(versionLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(hostField)
-                            .addComponent(nicknameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(hostLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
+                    .addComponent(nicknameField)
+                    .addComponent(versionLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                    .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hostField)
+                    .addComponent(nicknameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hostLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +140,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(hostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logInButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -157,13 +150,62 @@ public class Login extends javax.swing.JFrame {
     private void logInButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInButtonActionPerformed
         if (this.nicknameField.getText().equals("")) {
             this.titleLabel.setText("User nickname cannot be empty.");
-        } else {        
+        } else {
+            try {
+                this.titleLabel.setText("Connecting... Please Wait");
+                /* Create a node with the nickname and the host address */
+                Peer peer = new Peer(nicknameField.getText(), hostField.getText()); // port = portTCP = 9999
+                this.node = new Node(peer);
+                /* Start a server thread TCP to listen */
+                if (listenTCP != null && runnableTCP != null) {
+                    runnableTCP.terminate();
+                    listenTCP.join();
+                }
+                runnableTCP = new TCPListenerHandler(this.node, HistoryDB.getInstance());
+                listenTCP = new Thread(runnableTCP);
+                listenTCP.start();
+
+                /* This thread is used to reveice le broadcast by UDP*/
+                if (listenUDP != null && runnableUDP != null) {
+                    runnableUDP.terminate();
+                    listenUDP.join();
+                }
+                runnableUDP = new UDPListenerHandler(this.node);
+                listenUDP = new Thread(runnableUDP);
+                listenUDP.start();
+
+                /* Send a broadcast when log in*/
+                new UDPSenderService().sendBroadcast(this.node);
+
+                /* Open homepage if the nickname is unique*/
+                sleep(10); //Wait a bit for all messages to arrive
+                if (this.node.checkNameUniq()) {
+                    new UDPSenderService().sendBroadcast(this.node);
+                    this.node.getHome().display();
+                    this.setVisible(false);
+                    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    this.dispose();
+                } else {
+                    new UDPSenderService().sendDisconnect(this.node);
+                    this.titleLabel.setText("WARNING : This name has been used !");
+                }
+
+            } catch (IOException | InterruptedException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_logInButtonActionPerformed
+
+    private void nicknameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nicknameFieldKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (this.nicknameField.getText().equals("")) {
+                this.titleLabel.setText("User nickname cannot be empty.");
+            } else {
                 try {
                     this.titleLabel.setText("Connecting... Please Wait");
                     /* Create a node with the nickname and the host address */
                     Peer peer = new Peer(nicknameField.getText(), hostField.getText()); // port = portTCP = 9999
                     this.node = new Node(peer);
-                    //Home home = this.node.getHome();
 
                     /* Start a server thread TCP to listen */
                     if (listenTCP != null && runnableTCP != null) {
@@ -187,14 +229,7 @@ public class Login extends javax.swing.JFrame {
                     new UDPSenderService().sendBroadcast(this.node);
 
                     /* Open homepage if the nickname is unique*/
-                    //            Home home = new Home(node,this.history);
-                    //            System.out.println(this.node.checkNameUniq());
-                    //            System.out.println(this.node);
-                    //            //this.node.getHome().display();
-                    //            System.out.println(this.node);
-                    //            System.out.println(this.node.checkNameUniq());
-                    sleep(10);
-                    //            System.out.println(this.node);
+                    sleep(10);//Wait a bit for all messages to arrive
                     if (this.node.checkNameUniq()) {
                         new UDPSenderService().sendBroadcast(this.node);
                         this.node.getHome().display();
@@ -205,24 +240,17 @@ public class Login extends javax.swing.JFrame {
                         new UDPSenderService().sendDisconnect(this.node);
                         this.titleLabel.setText("WARNING : This name has been used !");
                     }
-                    //sleep(10);
-                    System.out.println(this.node);
-                    System.out.println(this.node.checkNameUniq());
 
                 } catch (IOException | InterruptedException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
         }
-    }//GEN-LAST:event_logInButtonActionPerformed
-
-    private void nicknameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nicknameFieldKeyPressed
-        // TODO add your handling code here:
 
     }//GEN-LAST:event_nicknameFieldKeyPressed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         try {
-            // TODO add your handling code here:
             new UDPSenderService().sendDisconnect(node);
         } catch (UnknownHostException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);

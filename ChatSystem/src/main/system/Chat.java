@@ -13,6 +13,7 @@ import main.system.model.Node;
 import main.system.model.Peer;
 import main.system.ui.Login;
 import java.util.Enumeration;
+
 /**
  *
  */
@@ -25,29 +26,25 @@ public class Chat {
     public static void main(String[] args) throws Exception {
 
         String ip = getLocalAddress().getHostAddress();
-        //String ip = this.getAddressIP();
         Node node = new Node(new Peer(ip));
-        
+
         Login loginWindow = new Login(node);
         loginWindow.display();
     }
-    
-    private static InetAddress getLocalAddress(){
+
+    private static InetAddress getLocalAddress() {
         try {
             Enumeration<NetworkInterface> b = NetworkInterface.getNetworkInterfaces();
-            while( b.hasMoreElements()){
-                for ( InterfaceAddress f : b.nextElement().getInterfaceAddresses())
-                    if ( f.getAddress().isSiteLocalAddress())
+            while (b.hasMoreElements()) {
+                for (InterfaceAddress f : b.nextElement().getInterfaceAddresses()) {
+                    if (f.getAddress().isSiteLocalAddress()) {
                         return f.getAddress();
+                    }
+                }
             }
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-    
-    public static String getAddressIP() {
-        
         return null;
     }
 }

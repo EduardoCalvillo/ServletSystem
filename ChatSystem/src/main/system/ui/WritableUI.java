@@ -10,7 +10,7 @@ package main.system.ui;
  * @author tranl
  */
 public interface WritableUI {
-   
+
     void write(String s);
-    
+
 }

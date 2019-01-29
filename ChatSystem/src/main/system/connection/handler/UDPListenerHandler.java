@@ -9,14 +9,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.system.connection.service.UDPSenderService;
 import main.system.model.Node;
 import main.system.model.Peer;
-import main.system.ui.WritableUI;
 
 /**
  *
@@ -63,6 +59,7 @@ public class UDPListenerHandler implements Runnable {
 
                 String hostser = inPacket.getAddress().getHostAddress();
                 if (!hostser.equals(node.getPeer().getHost())) {
+                    //Split the message into it's components
                     String msg = new String(inPacket.getData(), 0, inPacket.getLength());
                     String seg[] = msg.split(":");
                     String host = seg[0];
@@ -70,28 +67,32 @@ public class UDPListenerHandler implements Runnable {
                     int port = Integer.parseInt(seg[2]);
                     msg = seg[3];
 
-                    if (msg.equals("disconnect")) {
-                        System.out.println("[dis] " + host + " sends a " + msg);
-                        Peer p = new Peer(pseudo, host);
-                        p.setDisco(true);
-                        this.node.updatePeersList(p);
-                        this.node.updateHome();
-                    }
+                    switch (msg) {
+                        case "disconnect":
+                            System.out.println("[dis] " + host + " sends a " + msg);
+                            Peer p = new Peer(pseudo, host);
+                            p.setDisco(true);
+                            this.node.updatePeersList(p);
+                            this.node.updateHome();
+                            break;
 
-                    if (msg.equals("rename")) {
-                        System.out.println("[rnm] " + host + " sends a " + msg);
-                        String oldName = this.node.findNicknameByHost(host);
-                        this.node.updatePeersList(new Peer(pseudo, host));
-                        this.node.updateHome();
-                        this.node.getChatWindowForPeer(host).setTitle(pseudo + ": Chat");
-                        this.node.getHome().writeNoti(oldName + " changed name to " + pseudo);
-                    }
+                        case "rename":
+                            System.out.println("[rnm] " + host + " sends a " + msg);
+                            String oldName = this.node.findNicknameByHost(host);
+                            this.node.updatePeersList(new Peer(pseudo, host));
+                            this.node.updateHome();
+                            this.node.getChatWindowForPeer(host).setTitle(pseudo + ": Chat");
+                            this.node.getHome().writeNoti(oldName + " changed name to " + pseudo);
+                            break;
 
-                    if (msg.equals("OK")) {
-                        System.out.println("[bcst] " + host + " responds " + msg);
-                        this.node.updatePeersList(new Peer(pseudo, host));
-                        //this.node.getHome().updateHome();    
-                        this.node.updateHome();
+                        case "OK":
+                            System.out.println("[bcst] " + host + " responds " + msg);
+                            this.node.updatePeersList(new Peer(pseudo, host));  
+                            this.node.updateHome();
+                            break;
+
+                        default:
+                            System.out.println("Error in receiving UDP");
                     }
                 }
 

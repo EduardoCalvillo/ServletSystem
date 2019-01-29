@@ -54,9 +54,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         this.client = client;
         this.nicknameLabel.setText("Pseudo : " + node.getPeer().getPseudonyme());
         this.hostLabel.setText("My Host : " + node.getPeer().getHost());
-//        this.portLabel.setText("Port : " + node.getPeer().getPort());
         sourceport = node.getPeer().getPort();
-        //this.clientLabel.setText("To : " + this.client.getPeer().getPseudonyme() + " at " + this.client.getPeer().getHost() );
         this.clientLabel.setText("To : " + client.getPeer().getPseudonyme() + " at " + client.getPeer().getHost());
     }
 
@@ -177,14 +175,8 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         try {
             String msg = "[" + node.getPeer().getPseudonyme() + "] : " + message.getText();
             message.setText("");
-            new TCPSenderService().sendMessageTo(this.node ,this.client.getPeer().getHost(), Peer.PORT_TCP, msg);
+            new TCPSenderService().sendMessageTo(this.node, this.client.getPeer().getHost(), Peer.PORT_TCP, msg);
             this.node.getChatWindowForPeer(client.getPeer().getHost()).write(msg);
-//            new TCPSenderService().sendMessageTo("localhost",target,msg);
-//            new TCPSenderService().sendMessageTo(ipDistant,target,msg);
-//            new TCPSenderService().sendMessageTo(this.client.getPeer().getHost(),this.client.getPeer().getPort(),msg);
-//            System.out.println("Client port : " + this.client.getPeer().getPort());
-//            new UDPSenderService().sendMessageTo(ipDistant,target,msg);
-//            this.write(msg);
         } catch (Exception ex) {
             Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -192,19 +184,12 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
 
 
     private void messageKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
                 String msg = "[" + node.getPeer().getPseudonyme() + "] : " + message.getText();
                 message.setText("");
-                new TCPSenderService().sendMessageTo(this.node,this.client.getPeer().getHost(), Peer.PORT_TCP, msg);
+                new TCPSenderService().sendMessageTo(this.node, this.client.getPeer().getHost(), Peer.PORT_TCP, msg);
                 this.node.getChatWindowForPeer(client.getPeer().getHost()).write(msg);
-                //            new TCPSenderService().sendMessageTo("localhost",target,msg);
-                //            new TCPSenderService().sendMessageTo(ipDistant,target,msg);
-                //            new TCPSenderService().sendMessageTo(this.client.getPeer().getHost(),this.client.getPeer().getPort(),msg);
-                //            System.out.println("Client port : " + this.client.getPeer().getPort());
-                //            new UDPSenderService().sendMessageTo(ipDistant,target,msg);
-                //            this.write(msg);
             } catch (Exception ex) {
                 Logger.getLogger(ChatWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -212,7 +197,6 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
     }//GEN-LAST:event_messageKeyPressed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_backButtonActionPerformed
 
@@ -222,31 +206,28 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
     }//GEN-LAST:event_formWindowClosing
 
     private void sendImagebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendImagebuttonActionPerformed
-        // TODO add your handling code here:
-        
         JFileChooser fileChooser = new JFileChooser();
 
-        FileFilter filter = new FileNameExtensionFilter("Images (*.jpg , *.png)","jpg", "png");
+        FileFilter filter = new FileNameExtensionFilter("Images (*.jpg , *.png)", "jpg", "png");
         fileChooser.setFileFilter(filter);
 
         int returnValue = fileChooser.showOpenDialog(null);
-        if (returnValue == JFileChooser.APPROVE_OPTION) 
-        {
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            
+
             try {
                 BufferedImage bimg = ImageIO.read(selectedFile);
                 new TCPSenderService().sendImageTo(this.node, this.client.getPeer().getHost(), Peer.PORT_TCP, selectedFile);
-                this.node.getChatWindowForPeer(client.getPeer().getHost()).write("["+this.node.getPeer().getPseudonyme()+"] "+selectedFile.getName());
+                this.node.getChatWindowForPeer(client.getPeer().getHost()).write("[" + this.node.getPeer().getPseudonyme() + "] " + selectedFile.getName());
             } catch (IOException ex) {
                 System.out.println("Error with BufferedImage");
             } catch (Exception ex) {
                 System.out.println("Error with TCP sender");
             }
-            
+
         }
-        
-        
+
+
     }//GEN-LAST:event_sendImagebuttonActionPerformed
 
     /**
@@ -274,11 +255,7 @@ public class ChatWindow extends javax.swing.JFrame implements WritableUI {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm, dd/MM/yyyy] - ");
         return sdf.format(cal.getTime());
     }
-
-    /*public boolean isVisible(){
-        return this.isFocused();
     
-    }*/
     @Override
     public void write(String s) {
         String msg = timeStamp() + Emoji.replaceInText(s);

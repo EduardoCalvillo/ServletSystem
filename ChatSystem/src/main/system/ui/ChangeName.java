@@ -33,6 +33,7 @@ public class ChangeName extends javax.swing.JFrame {
      * Creates new form ChangeName
      *
      * @param node
+     * @param home
      */
     public ChangeName(Node node, Home home) {
         initComponents();
@@ -147,8 +148,7 @@ public class ChangeName extends javax.swing.JFrame {
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //TODO Inform other users ?
-                
+
                 /* Done and close */
                 this.setVisible(false);
                 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -156,14 +156,12 @@ public class ChangeName extends javax.swing.JFrame {
             } catch (BadLocationException ex) {
                 Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //TODO Inform other users ?
         } else {
             this.titreLabel.setText("This name has been used !");
         }
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         /* Close the rename window */
         this.setVisible(false);
@@ -171,7 +169,6 @@ public class ChangeName extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void nicknameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nicknameFieldKeyPressed
-        // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             String newName = nicknameField.getText();
             String oldName = this.node.getPeer().getPseudonyme();
@@ -188,8 +185,6 @@ public class ChangeName extends javax.swing.JFrame {
                     } catch (UnknownHostException ex) {
                         Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    //TODO Inform other users ?
-                    
                     /* Done and close */
                     this.setVisible(false);
                     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -197,7 +192,6 @@ public class ChangeName extends javax.swing.JFrame {
                 } catch (BadLocationException ex) {
                     Logger.getLogger(ChangeName.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //TODO Inform other users ?
             } else {
                 warningLabel.setText("This name has been used !");
             }
@@ -218,7 +212,6 @@ public class ChangeName extends javax.swing.JFrame {
     public Boolean checkNameUniq(String name) {
         Boolean res = true;
         for (Peer p : this.home.getNode().getOnlinePeers()) {
-            System.out.println(p.getPseudonyme());
             if (p.getPseudonyme().equals(name)) {
                 res = false;
             }

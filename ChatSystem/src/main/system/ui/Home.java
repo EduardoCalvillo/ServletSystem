@@ -5,7 +5,6 @@
  */
 package main.system.ui;
 
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -14,17 +13,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
-import javax.swing.ListModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.BadLocationException;
 import main.system.connection.handler.TCPListenerHandler;
 import main.system.connection.service.UDPSenderService;
-import main.system.data.ChatHistory;
 import main.system.data.HistoryDB;
-import main.system.data.MessageLog;
 import main.system.model.Node;
 import main.system.model.Peer;
-import static main.system.ui.Login.listenTCP;
 
 /**
  * *
@@ -114,11 +109,6 @@ public class Home extends javax.swing.JFrame {
         notiBox.setEditable(false);
         notiBox.setColumns(20);
         notiBox.setRows(5);
-        notiBox.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                notiBoxMouseEntered(evt);
-            }
-        });
         jScrollPane2.setViewportView(notiBox);
         notiBox.setWrapStyleWord(true);
         notiBox.setLineWrap(true);
@@ -184,19 +174,11 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-//    private void updateNoti() {
-//        while (true) {
-//            if (this.node.getMsg() != null)
-//            notiBox.append(this.node.getMsg() + System.lineSeparator());
-//        }
-//    }
-
     private void friendsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friendsListMouseClicked
 
         if (!friendsList.isSelectionEmpty()) {
             String friend = friendsList.getSelectedValue();
             String seg[] = friend.split(":");
-//            System.out.println(friend);
 
             /* Find a peer/node when we know his nickname
             ** Then, open the chatwindow with him
@@ -213,9 +195,6 @@ public class Home extends javax.swing.JFrame {
                 this.node.updateHome();
                 this.node.getChatWindowForPeer(client.getPeer().getHost()).setTitle(client.getPeer().getPseudonyme()+": Chat");
                 this.node.getChatWindowForPeer(client.getPeer().getHost()).display();
-                //this.setVisible(false);
-                //setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                //this.dispose();   
             } catch (IOException ex) {
                 Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -230,7 +209,6 @@ public class Home extends javax.swing.JFrame {
         } catch (UnknownHostException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        System.out.println(this.node.getPeer().getStatusDisconnect());
 
         /* Then, close the homepage and back to login window */
         this.node.closeAllChatWindow();
@@ -251,33 +229,20 @@ public class Home extends javax.swing.JFrame {
         /* Open a rename window to change the nickname */
         ChangeName changeNameWindow = new ChangeName(this.node, this);
         changeNameWindow.display();
-//        System.out.println(this.node.getPeer().getPseudonyme());
     }//GEN-LAST:event_renameButtonActionPerformed
 
 
-    private void notiBoxMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notiBoxMouseEntered
-        // TODO add your handling code here:
-//        if (this.node.getMsg() != "") {
-//            notiBox.append(this.node.getMsg() + System.lineSeparator());
-//            this.node.setMsg("");
-//        }
-    }//GEN-LAST:event_notiBoxMouseEntered
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
         /* Send a broadcast to inform a disconnection */
         try {
             new UDPSenderService().sendDisconnect(this.node);
         } catch (UnknownHostException ex) {
             Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
         }
-//        System.out.println(this.node.getPeer().getStatusDisconnect());
-
         /* Then, close the homepage and back to login window */
         this.node.closeAllChatWindow();
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        //this.dispose();
         Login loginWindow = new Login(node);
         loginWindow.setTitle("You have disconnected.");
         loginWindow.display();
@@ -294,16 +259,6 @@ public class Home extends javax.swing.JFrame {
         return this.node;
     }
 
-//    public Boolean checkNameUniq() {
-//        Boolean res = true;
-//        for (Peer p : this.node.getOnlinePeers()) {
-//            System.out.println(p.getPseudonyme());
-//            if (this.node.getPeer().getPseudonyme().equals(p.getPseudonyme())) {
-//                res = false;
-//            }
-//        }
-//        return res;
-//    }
     public void removeFromList(Peer p) {
         this.listFriendsOnlineModel.removeElement(p.getPseudonyme() + ":" + p.getHost() + ":" + p.getPort());
     }

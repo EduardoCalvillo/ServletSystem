@@ -36,23 +36,19 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="logInButton" min="-2" pref="87" max="-2" attributes="0"/>
-                      <EmptySpace min="121" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="nicknameField" max="32767" attributes="0"/>
-                          <Component id="versionLabel" alignment="1" pref="192" max="32767" attributes="0"/>
-                          <Component id="titleLabel" alignment="0" max="32767" attributes="0"/>
-                          <Component id="hostField" max="32767" attributes="0"/>
-                          <Component id="nicknameLabel" max="32767" attributes="0"/>
-                          <Component id="hostLabel" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="nicknameField" max="32767" attributes="0"/>
+                  <Component id="versionLabel" alignment="1" pref="192" max="32767" attributes="0"/>
+                  <Component id="titleLabel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="hostField" max="32767" attributes="0"/>
+                  <Component id="nicknameLabel" max="32767" attributes="0"/>
+                  <Component id="hostLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="logInButton" min="-2" pref="87" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -72,7 +68,7 @@
               <Component id="hostField" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="logInButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
