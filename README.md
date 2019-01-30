@@ -18,3 +18,5 @@ The server is able to notify to all of its subscribers:
   * Name Changes
   
 The communication between users stayed the same as in version 1.02, so we won't go into detail about it here. If you need more information, feel free to visit the previous Github repository hyperlink at the start of the document.
+# Download the program
+You can download ChatSystem v1.01 and view some extra information by clicking the "Releases" button on the bar alongside commits and contributors, or you can follow this [link](https://www.github.com/EduardoCalvillo/ServletSystem/releases) 
